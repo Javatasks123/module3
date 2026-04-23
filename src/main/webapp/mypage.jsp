@@ -8,6 +8,10 @@
 
     <body>
 
+        <div style="position:absolute; top:10px; right:10px;">
+            <a href="logout">Выйти</a>
+        </div>
+
         <div>
             <b>${time}</b>
         </div>
