@@ -1,4 +1,5 @@
 package com.example.servlet;
+import com.example.dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,11 +14,7 @@ import java.util.Map;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    static Map<String, String> users = new HashMap<>();
-
-    static {
-        users.put("admin", "123"); // тест
-    }
+    private UserDAO userDAO = new UserDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -31,12 +28,11 @@ public class LoginServlet extends HttpServlet {
             throws IOException {
 
         resp.setContentType("text/html;charset=UTF-8");
-        resp.setCharacterEncoding("UTF-8");
 
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        if (users.containsKey(login) && users.get(login).equals(password)) {
+        if (userDAO.login(login, password)) {
 
             HttpSession session = req.getSession();
             session.setAttribute("user", login);
