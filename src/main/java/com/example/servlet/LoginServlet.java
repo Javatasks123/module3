@@ -1,15 +1,12 @@
 package com.example.servlet;
+
 import com.example.dao.UserDAO;
-import jakarta.servlet.ServletException;
+import com.example.model.User;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -18,7 +15,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException, ServletException {
+            throws ServletException, IOException {
 
         req.getRequestDispatcher("/login.jsp").forward(req, resp);
     }
@@ -27,20 +24,16 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        resp.setContentType("text/html;charset=UTF-8");
-
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        if (userDAO.login(login, password)) {
+        User user = userDAO.findByLoginAndPassword(login, password);
 
+        if (user != null) {
             HttpSession session = req.getSession();
             session.setAttribute("user", login);
-
             resp.sendRedirect("files");
-
-        }
-        else {
+        } else {
             resp.getWriter().write("Неверный логин или пароль");
         }
     }

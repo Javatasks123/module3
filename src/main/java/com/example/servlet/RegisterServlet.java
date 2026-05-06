@@ -1,17 +1,13 @@
 package com.example.servlet;
 
 import com.example.dao.UserDAO;
-import com.example.util.DBUtil;
-import jakarta.servlet.ServletException;
+import com.example.model.User;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.util.Map;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
@@ -20,7 +16,7 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException, ServletException {
+            throws ServletException, IOException {
 
         req.getRequestDispatcher("/register.jsp").forward(req, resp);
     }
@@ -29,18 +25,17 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        resp.setContentType("text/html;charset=UTF-8");
-
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        if (userDAO.register(login, password)) {
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
 
-            new File("C:/Users/Student/filemanager/" + login).mkdirs();
-            resp.sendRedirect("login");
+        userDAO.register(user);
 
-        } else {
-            resp.getWriter().write("Ошибка регистрации");
-        }
+        new File("C:/Users/Student/filemanager/" + login).mkdirs();
+
+        resp.sendRedirect("login");
     }
 }

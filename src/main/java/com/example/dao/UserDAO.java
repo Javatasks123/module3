@@ -1,45 +1,32 @@
 package com.example.dao;
 
-import com.example.util.DBUtil;
-import java.sql.*;
+import com.example.model.User;
+import com.example.util.HibernateUtil;
+import org.hibernate.Session;
 
 public class UserDAO {
 
-    public boolean register(String login, String password) {
+    public void register(User user) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
 
-        String sql = "INSERT INTO users (login, password) VALUES (?, ?)";
+        session.save(user);
 
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, login);
-            ps.setString(2, password);
-
-            ps.executeUpdate();
-            return true;
-
-        } catch (SQLException e) {
-            return false;
-        }
+        session.getTransaction().commit();
+        session.close();
     }
 
-    public boolean login(String login, String password) {
+    public User findByLoginAndPassword(String login, String password) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
 
-        String sql = "SELECT * FROM users WHERE login=? AND password=?";
+        User user = session.createQuery(
+                        "FROM User WHERE login = :login AND password = :password",
+                        User.class)
+                .setParameter("login", login)
+                .setParameter("password", password)
+                .uniqueResult();
 
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, login);
-            ps.setString(2, password);
-
-            ResultSet rs = ps.executeQuery();
-
-            return rs.next();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        session.close();
+        return user;
     }
 }

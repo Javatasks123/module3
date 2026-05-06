@@ -43,31 +43,31 @@
 
         <tr>
 
-        <td>
+            <td>
 
-        <% if (f.isDirectory()) { %>
+                <% if (f.isDirectory()) { %>
 
-        <a href="files?path=<%=f.getAbsolutePath().replace("\\", "/")%>">
-            📁 <%=f.getName()%>
-        </a>
+                <a href="files?path=<%=f.getAbsolutePath().replace("\\", "/")%>">
+                    📁 <%=f.getName()%>
+                </a>
 
-        <% } else { %>
+                <% } else { %>
 
-        <a href="files?path=<%=f.getAbsolutePath().replace("\\", "/")%>">
-            📄 <%=f.getName()%>
-        </a>
+                <a href="files?path=<%=f.getAbsolutePath().replace("\\", "/")%>">
+                    📄 <%=f.getName()%>
+                </a>
 
-        <% } %>
+                <% } %>
 
-        </td>
+            </td>
 
-        <td>
-        <%= f.isFile() ? f.length() + " B" : "-" %>
-        </td>
+            <td>
+                <%= f.isFile() ? f.length() + " B" : "-" %>
+            </td>
 
-        <td>
-        <%= new java.util.Date(f.lastModified()) %>
-        </td>
+            <td>
+                <%= new java.util.Date(f.lastModified()) %>
+            </td>
 
         </tr>
 
